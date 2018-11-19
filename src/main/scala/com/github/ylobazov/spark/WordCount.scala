@@ -14,7 +14,7 @@ object WordCount {
 
     // Set the log level to only print errors
     Logger.getLogger("org").setLevel(Level.ERROR)
-    implicit val logger = Logger.getLogger(this.getClass)
+    implicit val logger: Logger = Logger.getLogger(this.getClass)
 
     // Create a SparkContext using the local machine
     val conf = new SparkConf().setMaster("local[*]").setAppName("WordCount").set("spark.driver.host", "localhost")

@@ -8,7 +8,7 @@ import util._
 
 object PurchaseByCustomer {
 
-  implicit val logger = Logger.getLogger(this.getClass)
+  implicit val logger: Logger = Logger.getLogger(this.getClass)
 
   def extractCustomerPricePairs(line: String): (Long, Double) = {
     val fields = line.split(",")
