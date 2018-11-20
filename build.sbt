@@ -1,15 +1,17 @@
+import Dependencies._
+
 name := "spark-scala"
 
 version := "0.1"
 
-scalaVersion := "2.12.7"
+scalaVersion := "2.11.8"
 
 resolvers in Global ++= Seq(
-  "MVNRepository"  at "https://mvnrepository.com/artifact",
+  "MVNRepository" at "https://mvnrepository.com/artifact",
 )
 
-libraryDependencies                ++= Seq(
-  "org.apache.spark" %% "spark-core" % "2.4.0",
-  "org.apache.logging.log4j" % "log4j-core" % "2.11.1"
+libraryDependencies ++= libs.map(_ % "provided")
 
-)
+// set the main class for packaging the main jar
+mainClass in Compile := Some("com.github.ylobazov.spark.MovieSimilarities")
+assemblyOutputPath in assembly := file("../compiledJars/spark-scala.jar")
