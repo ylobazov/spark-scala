@@ -9,6 +9,6 @@ object util {
     val clock = Clock.systemUTC()
     val start = clock.millis()
     func
-    logger.info(s"TIME CONSUMED: ${clock.millis() - start} ms")
+    logger.info(s"TIME CONSUMED: ${(clock.millis() - start)/1000} seconds.")
   }
 }

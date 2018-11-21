@@ -1,5 +1,5 @@
 //import Dependencies._
 //
-//lazy val ideaMainRunner = project.in(file("ideaMainRunner")).dependsOn(RootProject(file("."))).settings(
+//lazy val mainRunner = project.in(file("mainRunner")).dependsOn(RootProject(file("."))).settings(
 //  libraryDependencies ++= libs.map(_ % "compile")
 //)
