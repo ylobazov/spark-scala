@@ -9,6 +9,8 @@ import java.nio.charset.CodingErrorAction
 import scala.io.Codec
 import org.apache.spark.sql.functions._
 
+import com.github.ylobazov.spark.util._
+
 /** Find the movies with the most ratings. */
 object PopularMoviesDataSets {
 
@@ -43,26 +45,30 @@ object PopularMoviesDataSets {
     // Set the log level to only print errors
     Logger.getLogger("org").setLevel(Level.ERROR)
 
+    implicit val logger = Logger.getLogger(this.getClass)
+
     // Use new SparkSession interface in Spark 2.0
     val spark = SparkSession
       .builder
       .appName("PopularMovies")
       .master("local[*]")
-      .config("spark.sql.warehouse.dir", "file:///C:/temp") // Necessary to work around a Windows bug in Spark 2.0.0; omit if you're not on Windows.
+      .config("spark.driver.host", "localhost")
+//      .config("spark.sql.warehouse.dir", "file:///C:/temp") // Necessary to work around a Windows bug in Spark 2.0.0; omit if you're not on Windows.
       .getOrCreate()
 
-    // Read in each rating line and extract the movie ID; construct an RDD of Movie objects.
-    val lines = spark.sparkContext.textFile("../ml-100k/u.data").map(x => Movie(x.split("\t")(1).toInt))
+    measure {
+      // Read in each rating line and extract the movie ID; construct an RDD of Movie objects.
+      val lines = spark.sparkContext.textFile("../ml-100k/u.data").map(x => Movie(x.split("\t")(1).toInt))
 
-    // Convert to a DataSet
-    import spark.implicits._
-    val moviesDS = lines.toDS()
+      // Convert to a DataSet
+      import spark.implicits._
+      val moviesDS = lines.toDS()
 
-    // Some SQL-style magic to sort all movies by popularity in one line!
-    val topMovieIDs = moviesDS.groupBy("movieID").count().orderBy(desc("count")).cache()
+      // Some SQL-style magic to sort all movies by popularity in one line!
+      val topMovieIDs = moviesDS.groupBy("movieID").count().orderBy(desc("count")).cache()
 
-    // Show the results at this point:
-    /*
+      // Show the results at this point:
+      /*
     |movieID|count|
     +-------+-----+
     |     50|  584|
@@ -70,22 +76,22 @@ object PopularMoviesDataSets {
     |    100|  508|
     */
 
-    topMovieIDs.show()
+      topMovieIDs.show()
 
-    // Grab the top 10
-    val top10 = topMovieIDs.take(10)
+      // Grab the top 10
+      val top10 = topMovieIDs.take(10)
 
-    // Load up the movie ID -> name map
-    val names = loadMovieNames()
+      // Load up the movie ID -> name map
+      val names = loadMovieNames()
 
-    // Print the results
-    println
-    for (result <- top10) {
-      // result is just a Row at this point; we need to cast it back.
-      // Each row has movieID, count as above.
-      println (names(result(0).asInstanceOf[Int]) + ": " + result(1))
+      // Print the results
+      println
+      for (result <- top10) {
+        // result is just a Row at this point; we need to cast it back.
+        // Each row has movieID, count as above.
+        println(names(result(0).asInstanceOf[Int]) + ": " + result(1))
+      }
     }
-
     // Stop the session
     spark.stop()
   }

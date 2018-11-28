@@ -26,6 +26,7 @@ object SparkSQL {
       .builder
       .appName("SparkSQL")
       .master("local[*]")
+      .config("spark.driver.host", "localhost")
 //      .config("spark.sql.warehouse.dir", "file:///C:/temp") // Necessary to work around a Windows bug in Spark 2.0.0; omit if you're not on Windows.
       .getOrCreate()
 
@@ -35,6 +36,8 @@ object SparkSQL {
     // Infer the schema, and register the DataSet as a table.
     import spark.implicits._
     val schemaPeople = people.toDS
+
+    schemaPeople.select()
 
     schemaPeople.printSchema()
 
