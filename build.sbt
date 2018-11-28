@@ -9,9 +9,13 @@ resolvers in Global ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "org.apache.spark" %% "spark-core" % "2.4.0" % "provided",
-  "org.apache.spark" %% "spark-sql" % "2.4.0" % "provided",
-  "org.apache.spark" %% "spark-mllib" % "2.4.0" % "provided",
+  "org.apache.spark" %% "spark-core" % "2.2.2" % "provided",
+  "org.apache.spark" %% "spark-sql" % "2.2.2" % "provided",
+  "org.apache.spark" %% "spark-mllib" % "2.2.2" % "provided",
+
+  "org.apache.bahir" %% "spark-streaming-twitter" % "2.2.2",
+  "org.twitter4j" % "twitter4j-core" % "3.0.x",
+  "org.twitter4j" % "twitter4j-stream" % "3.0.x",
 
   "org.apache.logging.log4j" % "log4j-core" % "2.11.1"
 )
